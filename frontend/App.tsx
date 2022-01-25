@@ -1,9 +1,12 @@
+/* eslint-disable react-native/no-inline-styles */
 import { useWalletConnect } from "@walletconnect/react-native-dapp";
-import React from "react";
-import { Button, Text, TouchableOpacity, View } from "react-native";
+import React, { useState } from "react";
+import { Button, Text, View } from "react-native";
 
 export default function App(): JSX.Element {
   const connector = useWalletConnect();
+
+  const [signature, setSignature] = useState();
 
   const connectWallet = React.useCallback(() => {
     return connector.connect();
@@ -12,12 +15,13 @@ export default function App(): JSX.Element {
   const signTransaction = React.useCallback(async () => {
     try {
       console.log("signing");
-      const signature = await connector.signPersonalMessage([
+      const sign = await connector.signPersonalMessage([
         "Welcome T'Challa!",
         connector.accounts[0].toLowerCase(),
       ]);
       console.log("signed");
-      console.log(signature);
+      console.log(sign);
+      setSignature(sign);
     } catch (e) {
       console.error(e);
     }
@@ -28,30 +32,38 @@ export default function App(): JSX.Element {
   }, [connector]);
 
   return (
-    <View>
+    <View
+      style={{
+        alignItems: "center",
+        display: "flex",
+        height: "100%",
+        justifyContent: "center",
+        padding: 30,
+      }}
+    >
       {!connector.connected && (
-        <TouchableOpacity onPress={connectWallet}>
-          <Text>Connect a Wallet</Text>
-        </TouchableOpacity>
+        <Button
+          onPress={connectWallet}
+          title="Connect a Wallet"
+          color={"#bf2139"}
+        />
       )}
       {!!connector.connected && (
-        <View
-          // eslint-disable-next-line react-native/no-inline-styles
-          style={{
-            alignItems: "center",
-            display: "flex",
-            height: "100%",
-            justifyContent: "center",
-          }}
-        >
+        <>
           <Button onPress={signTransaction} title="Sign Message" />
-
           <Button
             color={"#ff0000"}
             onPress={killSession}
             title="Kill Session"
           />
-        </View>
+          {signature ? (
+            <Text style={{ alignSelf: "flex-end", marginTop: "auto" }}>
+              Signature: {signature}
+            </Text>
+          ) : (
+            <></>
+          )}
+        </>
       )}
     </View>
   );
