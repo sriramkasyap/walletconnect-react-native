@@ -1,0 +1,19 @@
+{
+  "expo": {
+    "name": "wctest",
+    "slug": "wctest",
+    "version": "1.0.0",
+    "sdkVersion": "44.0.0",
+    "platforms": [
+      "ios",
+      "android",
+      "web"
+    ],
+    "ios": {
+      "bundleIdentifier": "com.sriram.parcel.wctest"
+    },
+    "android": {
+      "package": "com.sriram.parcel.wctest"
+    }
+  }
+}
